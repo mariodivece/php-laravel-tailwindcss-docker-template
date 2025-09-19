@@ -40,6 +40,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Install Node dependencies and build assets
 RUN npm install && npm run build
 
+# Remove hot file if it exists (ensures production mode)
+RUN rm -f /var/www/html/public/hot
+
+
+
 # Create necessary directories and set permissions
 RUN mkdir -p /var/www/html/storage/logs \
     /var/www/html/storage/framework/cache \

@@ -54,6 +54,10 @@ docker volume rm webapp_data 2>/dev/null || echo "   Volume webapp_data not foun
 #Note: do not remove the database volume because we might already have data in there.
 #docker volume rm webapp_database 2>/dev/null || echo "   Volume webapp_database not found (this is normal for first run)"
 
+
+# Remove hot file to ensure production mode
+echo "🧹 Removing development hot file..."
+rm -f public/hot
 # Build and start the application
 echo "🔨 Building application image..."
 docker-compose build --no-cache

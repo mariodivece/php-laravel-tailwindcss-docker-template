@@ -143,3 +143,5 @@ EXPOSE 80 5173
 
 # Start development environment
 CMD ["/start-dev.sh"]
+
+# Note: hot file will be created by vite during development and should be removed before production builds
