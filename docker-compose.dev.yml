@@ -1,0 +1,44 @@
+services:
+  webapp-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8915:80"
+      - "5173:5173"
+    environment:
+      - APP_KEY=${APP_KEY}
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8915
+      - DB_DATABASE=/var/www/html/database/database.sqlite
+      - CACHE_STORE=file
+      - SESSION_DRIVER=file
+      - MAIL_MAILER=${MAIL_MAILER:-log}
+      - MAIL_HOST=${MAIL_HOST:-smtp.gmail.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME:-SinglePageWebApp}
+      - CONTACT_EMAIL=${CONTACT_EMAIL:-admin@example.com}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+    volumes:
+      # Mount source code for live editing
+      - .:/var/www/html
+      # Persist database and storage
+      - webapp_dev_database:/var/www/html/database
+      - webapp_dev_storage:/var/www/html/storage
+      # Exclude node_modules and vendor from sync for performance
+      - /var/www/html/node_modules
+      - /var/www/html/vendor
+    restart: unless-stopped
+    container_name: single-page-webapp-dev
+    command: /start-dev.sh
+
+volumes:
+  webapp_dev_database:
+    name: webapp_dev_database
+  webapp_dev_storage:
+    name: webapp_dev_storage

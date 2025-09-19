@@ -1,0 +1,145 @@
+# Development Dockerfile for PHP Laravel + React + TailwindCSS
+# This provides hot reloading for development
+FROM php:8.2-fpm
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    nginx \
+    nodejs \
+    npm \
+    sqlite3 \
+    libsqlite3-dev \
+    pkg-config \
+    supervisor \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_sqlite mbstring exif pcntl bcmath gd
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy the rest of the application first (simpler approach for dev)
+COPY . .
+
+# Install PHP dependencies (dev dependencies included for development)
+RUN composer install --optimize-autoloader
+
+# Install Node dependencies
+RUN npm install
+
+# Create necessary directories and set permissions
+RUN mkdir -p /var/www/html/storage/logs \
+    /var/www/html/storage/framework/cache \
+    /var/www/html/storage/framework/sessions \
+    /var/www/html/storage/framework/views \
+    /var/www/html/bootstrap/cache \
+    /var/www/html/database
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html/storage \
+    && chown -R www-data:www-data /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html/database \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
+
+# Copy nginx configuration
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+
+# Copy PHP-FPM configuration for development
+RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
+
+# Create development startup script
+RUN cat << 'SCRIPT_EOF' > /start-dev.sh
+#!/bin/bash
+
+# Exit on any error
+set -e
+
+echo "🚀 Starting Development Environment..."
+
+# Check if APP_KEY and ADMIN_TOKEN are set
+if [ -z "$APP_KEY" ]; then
+    echo "❌ ERROR: APP_KEY environment variable is not set!"
+    exit 1
+fi
+
+if [ -z "$ADMIN_TOKEN" ]; then
+    echo "❌ ERROR: ADMIN_TOKEN environment variable is not set!"
+    exit 1
+fi
+
+echo "✅ Environment variables validated"
+
+# Create SQLite database if it doesn't exist
+if [ ! -f /var/www/html/database/database.sqlite ]; then
+    echo "📦 Creating SQLite database..."
+    touch /var/www/html/database/database.sqlite
+    chown www-data:www-data /var/www/html/database/database.sqlite
+fi
+
+# Run database migrations
+echo "🗄️  Running database migrations..."
+php artisan migrate --force
+
+# Clear cache for development
+echo "🧹 Clearing cache for development..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+# Create supervisor configuration for development services
+cat << 'SUPERVISOR_EOF' > /etc/supervisor/conf.d/dev-services.conf
+[supervisord]
+nodaemon=true
+user=root
+
+[program:php-fpm]
+command=php-fpm -F
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/php-fpm.log
+stderr_logfile=/var/log/php-fpm.log
+
+[program:nginx]
+command=nginx -g "daemon off;"
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/nginx.log
+stderr_logfile=/var/log/nginx.log
+
+[program:vite]
+command=npm run dev
+directory=/var/www/html
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/vite.log
+stderr_logfile=/var/log/vite.log
+user=www-data
+environment=NODE_ENV=development
+SUPERVISOR_EOF
+
+echo "🔥 Starting development services with hot reloading..."
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+SCRIPT_EOF
+
+# Make the startup script executable
+RUN chmod +x /start-dev.sh
+
+# Expose ports
+EXPOSE 80 5173
+
+# Start development environment
+CMD ["/start-dev.sh"]

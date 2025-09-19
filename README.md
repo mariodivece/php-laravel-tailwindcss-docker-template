@@ -174,3 +174,71 @@ docker logs single-page-webapp
 ## License
 
 This project is open-source software licensed under the [MIT license](LICENSE).
+
+## Development Workflow
+
+### 🔥 Hot Reloading Development Environment
+
+For development with instant file changes and hot module replacement:
+
+```bash
+./start-dev.sh
+```
+
+This will start:
+- **Laravel/PHP**: Auto-reloads on file changes
+- **React/TypeScript**: Hot Module Replacement (HMR)
+- **Tailwind CSS**: Live CSS updates
+- **Vite Dev Server**: Running on port 5173
+
+### 🎯 Development Features
+
+- **Live File Synchronization**: All changes in VS Code are instantly reflected
+- **Hot Module Replacement**: React components update without page refresh
+- **CSS Live Updates**: Tailwind classes apply immediately
+- **PHP Auto-reload**: Laravel changes trigger automatic page refresh
+- **Database Persistence**: SQLite database persists between restarts
+
+### 📋 Development Commands
+
+```bash
+# Start development environment
+./start-dev.sh
+
+# Stop development environment
+./stop-dev.sh
+# or
+docker-compose -f docker-compose.dev.yml down
+
+# View live logs
+docker logs single-page-webapp-dev -f
+
+# Access development URLs
+# - Application: http://localhost:8915
+# - Vite Dev Server: http://localhost:5173
+```
+
+### 🛠️ VS Code Integration
+
+1. Open the project folder in VS Code
+2. Start the development environment: `./start-dev.sh`
+3. Edit any file (PHP, React, CSS, TypeScript)
+4. Changes appear instantly in your browser
+
+### 📁 File Watching
+
+The development environment watches for changes in:
+- **PHP Files**: `app/`, `routes/`, `config/`, `resources/views/`
+- **Frontend Files**: `resources/js/`, `resources/css/`
+- **Configuration**: `.env`, Laravel config files
+
+### 🔄 Development vs Production
+
+| Feature | Development (`./start-dev.sh`) | Production (`./deploy.sh`) |
+|---------|------------------------------|----------------------------|
+| File Changes | ✅ Live reload | ❌ Requires rebuild |
+| CSS/JS | ✅ HMR via Vite | ✅ Pre-built assets |
+| Caching | ❌ Disabled | ✅ Optimized |
+| Debug Mode | ✅ Enabled | ❌ Disabled |
+| Performance | 🐌 Development | 🚀 Production |
+
