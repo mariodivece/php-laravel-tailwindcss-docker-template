@@ -32,7 +32,7 @@ A modern single-page web application built with Laravel 12, React, TypeScript, a
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd v.01
+   cd <repository-name>
    ```
 
 2. **Configure environment variables**:
@@ -48,7 +48,7 @@ A modern single-page web application built with Laravel 12, React, TypeScript, a
 
 3. **Deploy the application**:
    ```bash
-   ./start.sh
+   ./deploy.sh
    ```
 
 4. **Access the application**:
@@ -100,7 +100,7 @@ curl "http://localhost:8482/api/newsletter/export?token=YOUR_ADMIN_TOKEN"
 ```
 
 ### Key Files
-- `start.sh` - Deployment script
+- `deploy.sh` - Deployment script
 - `Dockerfile` - Container configuration
 - `docker-compose.yml` - Service orchestration
 - `vite.config.ts` - Asset build configuration
@@ -110,7 +110,7 @@ curl "http://localhost:8482/api/newsletter/export?token=YOUR_ADMIN_TOKEN"
 
 ### Start the application:
 ```bash
-./start.sh
+docker-compose up -d --force-recreate
 ```
 
 ### Stop the application:
@@ -125,7 +125,7 @@ docker logs single-page-webapp
 
 ### Rebuild from scratch:
 ```bash
-./start.sh
+./deploy.sh
 ```
 
 ## Environment Variables

@@ -32,5 +32,5 @@
  - All node modules and composer setup needs to be performed INSIDE the container from the Dockerfile. Keep the project repository clean of generated or downloaded files and use a named volume for node_modules and generated resources.
  - Use a named volume for all applicatication resources, overlaying the project files into the container's named volume.
  - The container does not need any hot reload capabilities.
- - Create a start.sh script that stops the running container (if running), deletes the named volume if it exists, and recreates everything from scratch. The start.sh script must run the web application in production mode and check if `APP_KEY` and `ADMIN_TOKEN` environment variables are set.
+ - Create a deploy.sh script that stops the running container (if running), deletes the named volume if it exists, and recreates everything from scratch. The `deploy.sh` script must run the web application in production mode and check if `APP_KEY` and `ADMIN_TOKEN` environment variables are set.
  - Pre-populate the `APP_KEY` and `ADMIN_TOKEN` in the .env file. I will change that manually later.
