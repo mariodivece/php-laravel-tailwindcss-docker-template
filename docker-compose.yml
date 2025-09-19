@@ -1,0 +1,38 @@
+#version: '3.8'
+
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8482:80"
+    environment:
+      - APP_KEY=${APP_KEY}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_URL=${APP_URL:-http://localhost:8482}
+      - DB_DATABASE=/var/www/html/database/database.sqlite
+      - CACHE_STORE=database
+      - SESSION_DRIVER=database
+      - MAIL_MAILER=${MAIL_MAILER:-smtp}
+      - MAIL_HOST=${MAIL_HOST:-smtp.gmail.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME:-Single Page Web App}
+      - CONTACT_EMAIL=${CONTACT_EMAIL:-admin@example.com}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+    volumes:
+      - webapp_data:/var/www/html
+      - webapp_database:/var/www/html/database
+    restart: unless-stopped
+    container_name: single-page-webapp
+
+volumes:
+  webapp_data:
+    name: webapp_data
+  webapp_database:
+    name: webapp_database

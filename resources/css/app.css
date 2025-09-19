@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure forms look good across different browsers */
+input,
+textarea,
+select {
+  appearance: none;
+}
