@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /api/
 Allow: /
 
-Sitemap: http://localhost/sitemap.xml
+Sitemap: http://localhost:8482/sitemap.xml

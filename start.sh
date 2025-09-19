@@ -67,8 +67,8 @@ sleep 10
 if docker ps -q -f name=single-page-webapp | grep -q .; then
     echo "✅ Application started successfully!"
     echo ""
-    echo "🌐 Application is now available at: http://localhost"
-    echo "📊 Newsletter export API: http://localhost/api/newsletter/export?token=YOUR_ADMIN_TOKEN"
+    echo "🌐 Application is now available at: http://localhost:8482"
+    echo "📊 Newsletter export API: http://localhost:8482/api/newsletter/export?token=YOUR_ADMIN_TOKEN"
     echo ""
     echo "📋 Container status:"
     docker ps -f name=single-page-webapp

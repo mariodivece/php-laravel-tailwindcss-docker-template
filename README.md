@@ -52,8 +52,8 @@ A modern single-page web application built with Laravel 12, React, TypeScript, a
    ```
 
 4. **Access the application**:
-   - Web application: http://localhost
-   - Newsletter export API: http://localhost/api/newsletter/export?token=YOUR_ADMIN_TOKEN
+   - Web application: http://localhost:8482
+   - Newsletter export API: http://localhost:8482/api/newsletter/export?token=YOUR_ADMIN_TOKEN
 
 ## API Endpoints
 
@@ -65,9 +65,9 @@ A modern single-page web application built with Laravel 12, React, TypeScript, a
 
 Example:
 ```bash
-curl -H "Authorization: Bearer YOUR_ADMIN_TOKEN" http://localhost/api/newsletter/export
+curl -H "Authorization: Bearer YOUR_ADMIN_TOKEN" http://localhost:8482/api/newsletter/export
 # or
-curl "http://localhost/api/newsletter/export?token=YOUR_ADMIN_TOKEN"
+curl "http://localhost:8482/api/newsletter/export?token=YOUR_ADMIN_TOKEN"
 ```
 
 ### Newsletter Subscription
