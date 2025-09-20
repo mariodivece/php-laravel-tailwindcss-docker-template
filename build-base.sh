@@ -7,8 +7,8 @@ set -e
 
 echo "🏗️  Building base Docker image with OS dependencies..."
 
-# Build the base image
-docker build -f Dockerfile.base -t laravel-react-base .
+# Build the base image without using cache
+docker build --no-cache -f Dockerfile.base -t laravel-react-base .
 
 echo "✅ Base image 'laravel-react-base' built successfully!"
 echo ""
