@@ -36,6 +36,15 @@ echo "✅ Environment variables validated successfully"
 echo "   - APP_KEY: ${APP_KEY:0:20}..." 
 echo "   - ADMIN_TOKEN: ${ADMIN_TOKEN:0:10}..."
 
+# Check if base image exists, if not build it
+echo "🔍 Checking for base image 'laravel-react-base'..."
+if ! docker images -q laravel-react-base | grep -q .; then
+    echo "📦 Base image not found. Building base image with OS dependencies..."
+    ./build-base.sh
+else
+    echo "✅ Base image 'laravel-react-base' found"
+fi
+
 # Stop and remove existing container if it exists
 echo "🛑 Stopping existing container (if running)..."
 if docker ps -q -f name=single-page-webapp | grep -q .; then
@@ -54,10 +63,10 @@ docker volume rm webapp_data 2>/dev/null || echo "   Volume webapp_data not foun
 #Note: do not remove the database volume because we might already have data in there.
 #docker volume rm webapp_database 2>/dev/null || echo "   Volume webapp_database not found (this is normal for first run)"
 
-
 # Remove hot file to ensure production mode
 echo "🧹 Removing development hot file..."
 rm -f public/hot
+
 # Build and start the application
 echo "🔨 Building application image..."
 docker-compose build --no-cache

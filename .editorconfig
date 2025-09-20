@@ -1,5 +1,6 @@
 root = true
 
+# Default settings for all files
 [*]
 charset = utf-8
 end_of_line = lf
@@ -8,14 +9,48 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
+# Markdown files
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{js,jsx,ts,tsx,css}]
+# JavaScript, TypeScript, CSS files
+[*.{js,jsx,ts,tsx,css,scss}]
 indent_size = 2
 
-[*.yml,*.yaml]
+# YAML files
+[*.{yml,yaml}]
 indent_size = 2
 
+# JSON files
 [*.json]
 indent_size = 2
+
+# Shell scripts - explicitly enforce LF
+[*.sh]
+end_of_line = lf
+charset = utf-8
+
+# Environment files
+[.env*]
+end_of_line = lf
+charset = utf-8
+
+# Docker files
+[{Dockerfile*,*.dockerfile}]
+end_of_line = lf
+charset = utf-8
+
+# Configuration files
+[*.{conf,config,ini}]
+end_of_line = lf
+charset = utf-8
+
+# PHP files
+[*.php]
+end_of_line = lf
+charset = utf-8
+
+# SVG files - treat as binary to prevent corruption
+[*.svg]
+insert_final_newline = false
+trim_trailing_whitespace = false

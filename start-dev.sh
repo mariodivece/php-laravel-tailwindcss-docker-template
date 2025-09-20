@@ -34,6 +34,15 @@ fi
 
 echo "✅ Environment variables validated successfully"
 
+# Check if base image exists, if not build it
+echo "🔍 Checking for base image 'laravel-react-base'..."
+if ! docker images -q laravel-react-base | grep -q .; then
+    echo "📦 Base image not found. Building base image with OS dependencies..."
+    ./build-base.sh
+else
+    echo "✅ Base image 'laravel-react-base' found"
+fi
+
 # Stop existing development container if running
 echo "🛑 Stopping existing development container (if running)..."
 docker-compose -f docker-compose.dev.yml down 2>/dev/null || true
